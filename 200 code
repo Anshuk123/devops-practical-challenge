@@ -1,0 +1,12 @@
+#/bin/bash
+url=google.com
+a=`curl -s -I --head www.google.com | grep -w  HTTP/1.1 | awk '{print $2}'`
+if [ $a -ne 200 ]
+then
+exit 1
+else
+echo "Server is up"
+fi
+
+
+### this has to be scheduled in jenkins so once the code exit by 1 it will alert via email
