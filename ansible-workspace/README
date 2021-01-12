@@ -1,0 +1,6 @@
+1. Create a slave EC2 ubuntu machine
+2. Make passwordless authentication
+3  then install ansible using yum install ansible
+4. Specify the ip of the slave machine in the host machine
+5. create playbooks and run it
+

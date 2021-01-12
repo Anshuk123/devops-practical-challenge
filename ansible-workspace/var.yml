@@ -1,0 +1,3 @@
+destination_file: /etc/ansible/index.html
+ansible_user: ubuntu
+domain: anshukuser.com

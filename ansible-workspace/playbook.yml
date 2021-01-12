@@ -1,0 +1,63 @@
+---
+- hosts: nginx
+  remote_user: "{{ ansible_user }}"
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+   - name: 'install python'
+     raw: 'sudo apt-get -y install python'
+  tasks:
+   - name: Nginx setup for Centos
+     yum:
+       name: nginx
+       state: latest
+       update_cache : true
+     when: ansible_os_family == "RedHat"
+
+   
+
+
+   - name: Nginx setup for Ubuntu
+     apt:
+       name: nginx
+       state: latest
+       update_cache: true
+     when: ansible_os_family == "Debian"
+   - name: "www directory"
+     file:
+        path: /var/www/{{ domain }}
+        state: directory
+        mode: '0775'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+   - name: delete default nginx site
+     file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+   - service:
+       name: nginx
+       state: restarted
+
+
+   - name: nginx conf
+     template:
+       src: site.conf.j2
+       dest: /etc/nginx/sites-enabled/{{ domain }}
+       owner: root
+       group: root
+       mode: '0644'
+  
+
+
+   - service: 
+       name: nginx
+       state: restarted
+       
+   - synchronize:
+       src: site/
+       dest: /var/www/{{ domain }}
+       archive: no
+       checksum: yes
+       recursive: yes
+       delete: yes
+     become: no
